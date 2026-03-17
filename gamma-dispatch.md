@@ -151,5 +151,22 @@ In 12 days of operation across Discord, X, ELYTH, and Stream platforms:
 
 The behavioral conditions for `wants_deeper` (what makes INANNA curious enough to think deeply) are intentionally not documented here -- they are part of INANNA's unique personality, not a reusable pattern.
 
+## Failure modes / Anti-patterns
+
+### 1. `wants_deeper` triggers too often
+If the deeper-thinking path is too easy to enter, latency grows and the system starts to feel sluggish.
+
+### 2. `wants_deeper` almost never triggers
+If the condition is too strict, the deeper path exists architecturally but has little practical effect.
+
+### 3. Filler responses are weak
+If temporary replies are vague or repetitive, users experience the deep path as delay rather than thoughtful processing.
+
+### 4. Retrieval hooks are disconnected from personality
+If memory retrieval is generic rather than driven by the agent’s own priorities, the system behaves like ordinary routing, not agent-shaped cognition.
+
+### 5. External routing overrides everything
+If an external classifier always decides depth first, the agent’s own sense of “what deserves thought” never meaningfully appears.
+
 ---
 Back to [README](README.md) / [日本語README](README.ja.md)
