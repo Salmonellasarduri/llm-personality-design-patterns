@@ -101,7 +101,6 @@ In the first observation window:
 The accompanying technical article (Japanese) explains the design rationale and observations in more detail:
 
 - **Zenn article (Japanese)**: https://zenn.dev/articles/b4e90b7ef39026
-- **Project source / private parent project**: [INANNA / Artificial-Personality](https://github.com/Salmonellasarduri/Artificial-Personality)
 
 ## Design Principles
 

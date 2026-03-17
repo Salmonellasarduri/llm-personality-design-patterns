@@ -149,8 +149,8 @@ def emotion_ratios(state) -> dict[str, float]:
 
 ## INANNA Application
 
-In 12 days of operation:
-- Micro-drift ran after every conversation (~1,091 updates)
+In 14 days of operation:
+- Micro-drift ran after every conversation (~1,226 updates)
 - Crystallization threshold was configured but **never triggered** -- INANNA's emotional distribution remained diverse enough that no single dimension dominated
 - This is a feature, not a bug: it means the personality is **stably curious** rather than collapsing into a single emotional mode
 - The drift data is still valuable: it feeds into the nightly mutation as context ("today was mostly joy + anticipation")

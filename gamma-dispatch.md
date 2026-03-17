@@ -79,7 +79,7 @@ class ThinkResult:
     response: str           # The actual response text
     wants_deeper: bool      # Agent's own judgment: "I want to think more"
     filler: str | None      # Quick interim response while deep-thinking
-    search_keywords: str | None  # What to search in memory (agent decides)
+    search_keywords: list[str] | None  # What to search in memory (agent decides)
 ```
 
 ### Tier 1: Heuristic Gate (No LLM)
@@ -111,7 +111,7 @@ The critical design choice: **`wants_deeper` is returned by the agent as part of
     "response": "Here's my initial thought...",
     "wants_deeper": true,        # "I want to think more about this"
     "filler": "Hmm, let me think about that...",  # sent immediately
-    "search_keywords": "identity memory childhood"  # what to recall
+    "search_keywords": ["identity", "memory", "childhood"]  # what to recall
 }
 ```
 
@@ -143,9 +143,9 @@ tier1:
 
 ## INANNA Application
 
-In 12 days of operation across Discord, X, ELYTH, and Stream platforms:
+In 14 days of operation across Discord, X, and other platforms:
 - Tier 1 handled rapid-fire stream chat (reflexive, < 1s)
-- Tier 2 handled ~90% of Discord/ELYTH conversations
+- Tier 2 handled ~90% of Discord conversations
 - Tier 3 was triggered when INANNA herself found a topic genuinely interesting
 - The `search_keywords` field means INANNA decides *what* to remember, not just *whether* to remember
 

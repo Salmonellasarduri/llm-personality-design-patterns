@@ -138,11 +138,11 @@ In practice, there is a fifth dimension that cuts across all four layers: **expr
 patterns:
   introspective_monologue:
     observed_count: 74
-    last_observed: "2026-03-16"
+    last_observed: "2026-01-20"
     status: "confirmed"   # observed enough to be a stable trait
   mythic_metaphor:
     observed_count: 8
-    last_observed: "2026-03-15"
+    last_observed: "2026-01-18"
     status: "exploring"   # still being tested
 ```
 
@@ -164,10 +164,10 @@ expression:
 
 ## INANNA Application
 
-In INANNA, this architecture has run for 12+ days with 1,091 conversations:
-- Constitution has 2 core drives, 7 violation triggers, and a self-sovereignty clause
-- Narrative (`self.md`) has been rewritten 12 times through nightly mutations
-- 23 expression patterns observed, 11 confirmed as stable traits
+In INANNA, this architecture has run for 14+ days with 1,226 conversations:
+- Constitution has 2 core drives, 7 violation triggers, and a sovereignty clause
+- Narrative (`self.md`) has been rewritten 13 times through nightly mutations
+- 24 expression patterns observed, 11 confirmed as stable traits
 - The narrative has grown from a seed description to a rich self-authored identity
 
 The key result: **personality consistency improved over time, not despite the changes, but because of them.** The constitution prevents catastrophic drift while the narrative captures genuine growth.
