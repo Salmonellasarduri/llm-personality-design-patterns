@@ -103,16 +103,6 @@ The accompanying technical article (Japanese) explains the design rationale and 
 - **Zenn article (Japanese)**: https://zenn.dev/articles/b4e90b7ef39026
 - **Project source / private parent project**: [INANNA / Artificial-Personality](https://github.com/Salmonellasarduri/Artificial-Personality)
 
-## Roadmap
-
-Planned improvements for this repository:
-
-- failure modes / anti-patterns for each pattern
-- minimal runnable examples
-- validation on additional agents
-- more extracted patterns
-- clearer integration guidance between patterns
-
 ## Design Principles
 
 Across the patterns in this repository, the recurring principles are:
