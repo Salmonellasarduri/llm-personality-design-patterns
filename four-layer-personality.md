@@ -171,3 +171,6 @@ In INANNA, this architecture has run for 12+ days with 1,091 conversations:
 - The narrative has grown from a seed description to a rich self-authored identity
 
 The key result: **personality consistency improved over time, not despite the changes, but because of them.** The constitution prevents catastrophic drift while the narrative captures genuine growth.
+
+---
+Back to [README](README.md) / [日本語README](README.ja.md)
