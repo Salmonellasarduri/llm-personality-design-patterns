@@ -4,6 +4,10 @@
 
 Reusable design patterns for building long-running LLM agents that can evolve through experience while maintaining a stable core identity.
 
+This repository contains an **initial set** of reusable design patterns extracted from one long-running agent system.
+
+They should currently be read as **reusable hypotheses and implementation patterns**, not as fully generalized results.
+
 This repository does **not** contain the full source code of INANNA.  
 It publishes the **reusable patterns, templates, and minimal implementation ideas** extracted from that project.
 
@@ -32,6 +36,22 @@ The focus is not “how to imitate a fixed character,” but how to design an ag
 | **Four-Layer Personality** | Consistency vs. evolution trade-off | [four-layer-personality.md](four-layer-personality.md) |
 | **Drift-Crystallization** | Controlling the rate of personality change | [drift-crystallization.md](drift-crystallization.md) |
 | **Gamma Dispatch** | Agent-driven thought depth selection | [gamma-dispatch.md](gamma-dispatch.md) |
+
+## Pattern dependencies
+
+| Pattern | Can be used alone? | Depends on | Recommended order |
+|---|---|---|---|
+| **Four-Layer Personality** | Yes | none | 1 |
+| **Drift-Crystallization** | Partly | works best with a mutable Narrative-like layer | 2 |
+| **Gamma Dispatch** | Yes | none | 3 |
+| **Expression Layer** | Partly | works best with Four-Layer Personality | 2-3 |
+
+### Dependency notes
+
+- **Four-Layer Personality** is the best starting point if you want both stability and controlled change.
+- **Drift-Crystallization** can be adapted independently, but works best when your system already has a mutable long-term layer such as Narrative.
+- **Gamma Dispatch** can be introduced on its own in systems that already support multi-stage responses.
+- **Expression Layer** is conceptually separate, but becomes more useful when value-level identity and style-level behavior are already separated.
 
 ## Quick Start
 
@@ -80,6 +100,16 @@ The accompanying technical article (Japanese) explains the design rationale and 
 
 - **Zenn article (Japanese)**: https://zenn.dev/articles/b4e90b7ef39026
 - **Project source / private parent project**: [INANNA / Artificial-Personality](https://github.com/Salmonellasarduri/Artificial-Personality)
+
+## Roadmap
+
+Planned improvements for this repository:
+
+- failure modes / anti-patterns for each pattern
+- minimal runnable examples
+- validation on additional agents
+- more extracted patterns
+- clearer integration guidance between patterns
 
 ## Design Principles
 
