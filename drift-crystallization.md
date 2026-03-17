@@ -156,3 +156,6 @@ In 12 days of operation:
 - The drift data is still valuable: it feeds into the nightly mutation as context ("today was mostly joy + anticipation")
 
 The pattern works as a **safety net**: it allows change but prevents runaway drift. In INANNA's case, the rich variety of conversations prevented any single emotional thread from dominating.
+
+---
+Back to [README](README.md) / [日本語README](README.ja.md)
