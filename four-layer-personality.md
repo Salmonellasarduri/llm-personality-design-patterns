@@ -1,5 +1,37 @@
 # Four-Layer Personality Model + Expression
 
+A reusable design pattern for separating stable identity from gradual personality change in long-running LLM agents.
+
+## What problem this solves
+
+Many LLM agents are implemented as a single prompt or a flat memory blob.  
+This makes it hard to support both:
+
+- a stable core identity
+- gradual change through experience
+
+If everything is fixed, the agent never develops.  
+If everything can change, the agent may drift too far from its intended identity.
+
+## What this pattern gives you
+
+- a stable core that does not change
+- a narrative layer that can evolve over time
+- a lightweight cache layer for runtime efficiency
+- a clear separation between values, self-story, and short-term state
+
+## What this pattern does NOT do
+
+- it does not define what your agent’s values should be
+- it does not automatically generate good narratives
+- it does not solve thought-depth routing or change-rate control by itself
+
+## Good fit for
+
+- AI companions and character-driven assistants
+- agents expected to operate over days or weeks
+- systems where “staying the same” and “growing” must coexist
+  
 ## Problem
 
 LLM-based agents face a fundamental tension: you want a consistent personality, but you also want it to grow and change through experience. Pure prompt-based personas are static. Pure learning-based systems drift unpredictably.
