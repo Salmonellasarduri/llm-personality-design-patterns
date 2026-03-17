@@ -42,6 +42,8 @@
 
 ## クイックスタート
 
+最小実行例は [`examples/`](examples/) に置いてあります。
+
 1. [`examples/constitution-template.yaml`](examples/constitution-template.yaml) をコピー
 2. エージェントの核心価値を定義
 3. 必要なパターンから読む
