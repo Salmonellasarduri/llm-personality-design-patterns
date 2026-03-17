@@ -1,24 +1,103 @@
 # LLM Personality Design Patterns
 
-Design patterns for building LLM-based autonomous personalities that grow through experience while maintaining core identity.
+> 日本語README: [README.ja.md](README.ja.md)
+
+Reusable design patterns for building long-running LLM agents that can evolve through experience while maintaining a stable core identity.
+
+This repository does **not** contain the full source code of INANNA.  
+It publishes the **reusable patterns, templates, and minimal implementation ideas** extracted from that project.
+
+## Who this is for
+
+This repository is for developers building:
+
+- AI companions
+- AITubers or character-driven assistants
+- long-running conversational agents
+- systems that need both **consistency** and **controlled change**
+
+## What this repository contains
+
+The focus is not “how to imitate a fixed character,” but how to design an agent that can:
+
+- keep core values stable
+- change gradually through experience
+- avoid uncontrolled drift
+- decide when deeper thinking is needed
 
 ## Patterns
 
 | Pattern | Problem it solves | Docs |
-|---------|------------------|------|
+|---------|-------------------|------|
 | **Four-Layer Personality** | Consistency vs. evolution trade-off | [four-layer-personality.md](four-layer-personality.md) |
-| **Drift-Crystallization** | Controlling rate of personality change | [drift-crystallization.md](drift-crystallization.md) |
+| **Drift-Crystallization** | Controlling the rate of personality change | [drift-crystallization.md](drift-crystallization.md) |
 | **Gamma Dispatch** | Agent-driven thought depth selection | [gamma-dispatch.md](gamma-dispatch.md) |
 
 ## Quick Start
 
-1. Copy [`examples/constitution-template.yaml`](examples/constitution-template.yaml) and fill in your agent's core values
-2. Pick the pattern(s) relevant to your use case
-3. Each pattern doc includes: Problem, Solution, Minimal Config, and pseudocode
+1. Copy [`examples/constitution-template.yaml`](examples/constitution-template.yaml)
+2. Define your agent’s non-negotiable core values
+3. Pick the pattern(s) relevant to your use case
+4. Start from the minimal config / pseudocode in each pattern document
+
+Each pattern document includes:
+
+- the problem it addresses
+- the design idea
+- a minimal configuration
+- pseudocode or implementation guidance
+
+## Repository Scope
+
+This repository is intentionally scoped to **patterns and templates**.
+
+It includes:
+
+- design documents
+- reusable templates
+- pseudocode / minimal implementation ideas
+- pattern-level explanations
+
+It does **not** include:
+
+- the entire private codebase of INANNA
+- all runtime infrastructure
+- private conversation logs
+- project-specific secrets or deployment details
 
 ## Context
 
-These patterns were extracted from [INANNA](https://github.com/Salmonellasarduri/Artificial-Personality), an autonomous agent that has been running for 14+ days with 1,200+ conversations. The accompanying technical article (Japanese) will be published on [Zenn](https://zenn.dev/).
+These patterns were extracted from **INANNA**, an autonomous agent designed for long-term dialogue, narrative memory, and controlled personality change.
+
+In the first observation window:
+
+- 14+ days of operation
+- 1,200+ conversation records
+- repeated nightly mutation
+- no crystallization event triggered yet
+
+The accompanying technical article (Japanese) explains the design rationale and observations in more detail:
+
+- **Zenn article**: coming soon
+- **Project source / private parent project**: [INANNA / Artificial-Personality](https://github.com/Salmonellasarduri/Artificial-Personality)
+
+## Design Principles
+
+Across the patterns in this repository, the recurring principles are:
+
+- **Narrative-first personality** rather than flat numeric traits
+- **Stable core + mutable layers** instead of all-or-nothing updates
+- **Controlled change** rather than unrestricted drift
+- **Agent-driven cognition** where possible, instead of routing everything externally
+
+## Suggested Reading Order
+
+If you are new to the project, a good order is:
+
+1. **Four-Layer Personality**
+2. **Drift-Crystallization**
+3. **Gamma Dispatch**
+4. `examples/constitution-template.yaml`
 
 ## License
 
