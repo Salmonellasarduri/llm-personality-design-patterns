@@ -55,6 +55,8 @@ The focus is not “how to imitate a fixed character,” but how to design an ag
 
 ## Quick Start
 
+Minimal runnable examples are available in the [`examples/`](examples/) directory.
+
 1. Copy [`examples/constitution-template.yaml`](examples/constitution-template.yaml)
 2. Define your agent’s non-negotiable core values
 3. Pick the pattern(s) relevant to your use case
