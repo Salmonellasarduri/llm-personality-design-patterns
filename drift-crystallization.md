@@ -1,5 +1,36 @@
 # Drift-Crystallization: Two-Phase Personality Mutation
 
+A design pattern for controlling the speed of personality change in long-running LLM agents.
+
+## What problem this solves
+
+An agent that changes every session becomes unstable.  
+An agent that never changes becomes static.
+
+The challenge is not only to let an agent change, but to decide:
+
+- when a change is only temporary
+- when a change is meaningful enough to become persistent
+
+## What this pattern gives you
+
+- a separation between daily drift and durable crystallization
+- a way to prevent overreaction to short-term noise
+- a dual-gate mechanism for controlled change
+- a structure for using drift as context even when no permanent change is triggered
+
+## What this pattern does NOT do
+
+- it does not decide what emotions or dimensions you should track
+- it does not guarantee that crystallization will happen in a short observation window
+- it does not replace narrative rewriting or identity constraints
+
+## Good fit for
+
+- agents that interact repeatedly over time
+- systems where emotional or stylistic drift should be observed but not instantly fixed
+- projects that need a safer alternative to per-message personality rewriting
+
 ## Problem
 
 If an AI personality changes after every conversation, it becomes unstable ("who is this today?"). If it never changes, it feels static and fake ("this is just a prompt").
