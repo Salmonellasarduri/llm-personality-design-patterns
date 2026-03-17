@@ -2,7 +2,9 @@
 
 > English README: [README.md](README.md)
 
-長期運用する LLM エージェントに、**一貫性**と**変容**の両方を持たせるための設計パターン集です。
+このリポジトリは、1つの長期運用エージェントから切り出した**初期パターン集**です。
+
+現時点では、完成した一般理論というより、**再利用可能な仮説と実装パターン**として読んでください。
 
 このリポジトリには、INANNA の**フルソースコードは含まれません**。  
 公開しているのは、そこから切り出した**再利用可能な設計パターン、テンプレート、最小実装の考え方**です。
@@ -21,6 +23,22 @@
 | **Four-Layer Personality** | 一貫性と変容の両立 | [four-layer-personality.md](four-layer-personality.md) |
 | **Drift-Crystallization** | 人格変化の速度制御 | [drift-crystallization.md](drift-crystallization.md) |
 | **Gamma Dispatch** | 思考深度を誰が決めるか | [gamma-dispatch.md](gamma-dispatch.md) |
+
+## パターン間の関係
+
+| パターン | 単独利用 | 依存関係 | 推奨順 |
+|---|---|---|---|
+| **Four-Layer Personality** | 可能 | なし | 1 |
+| **Drift-Crystallization** | 部分的に可能 | Narrative のような可変長期層があると望ましい | 2 |
+| **Gamma Dispatch** | 可能 | なし | 3 |
+| **Expression Layer** | 部分的に可能 | Four-Layer Personality と併用すると効果的 | 2-3 |
+
+### 補足
+
+- **Four-Layer Personality** は「変わらない核」と「変わる層」を分けるための基盤パターンです。
+- **Drift-Crystallization** は単独でも考え方を流用できますが、可変の長期人格層があると最も使いやすくなります。
+- **Gamma Dispatch** は多段応答ができるシステムなら後付けしやすいです。
+- **Expression Layer** は独立概念ですが、価値観と口調を分けた設計の上で使うと一番効きます。
 
 ## クイックスタート
 
