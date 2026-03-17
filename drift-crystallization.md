@@ -157,5 +157,22 @@ In 12 days of operation:
 
 The pattern works as a **safety net**: it allows change but prevents runaway drift. In INANNA's case, the rich variety of conversations prevented any single emotional thread from dominating.
 
+## Failure modes / Anti-patterns
+
+### 1. Thresholds are too low
+If crystallization thresholds are too permissive, short-term noise gets treated as durable personality change.
+
+### 2. Thresholds are too high
+If thresholds are too strict, the system may never stabilize anything meaningful, even over long operation windows.
+
+### 3. Drift dimensions are too coarse
+If the tracked dimensions are too broad or poorly chosen, meaningful tendencies are flattened into unusable averages.
+
+### 4. No distinction between drift and crystallization
+If every detected shift immediately rewrites long-term identity, the agent will appear volatile and inconsistent.
+
+### 5. Crystallization without evidence history
+If you do not preserve multi-day evidence, durable change becomes a one-shot guess rather than an accumulation-based decision.
+
 ---
 Back to [README](README.md) / [日本語README](README.ja.md)
