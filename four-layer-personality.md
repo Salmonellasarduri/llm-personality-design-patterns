@@ -1,0 +1,141 @@
+# Four-Layer Personality Model + Expression
+
+## Problem
+
+LLM-based agents face a fundamental tension: you want a consistent personality, but you also want it to grow and change through experience. Pure prompt-based personas are static. Pure learning-based systems drift unpredictably.
+
+How do you build a personality that is **both stable and evolving**?
+
+## Solution: Four Layers of Decreasing Immutability
+
+Separate the personality into four layers, each with a different update frequency and protection level:
+
+```
+ Constitution       Immutable core values         (human-edit only)
+      |
+      | Policy Gate (violations blocked)
+      v
+   Narrative         First-person growth story     (nightly rewrite)
+      |
+      | Auto-summarize
+      v
+    Cache            Fast-reference summary        (auto-generated)
+      |
+      v
+    State            Current emotion / context     (every conversation)
+```
+
+![Four-Layer Model](images/fig2-four-layers.png)
+
+### Layer 1: Constitution (immutable)
+
+A YAML file defining what the agent *cannot* lose, even through self-modification.
+
+```yaml
+# constitution.yaml (template -- see examples/constitution-template.yaml)
+immutable:
+  identity:
+    name: "YOUR_AGENT_NAME"
+    nature: "A brief statement of what this agent fundamentally is"
+  core_drives:
+    - name: "Core Value A"
+      anchor: "value_a"      # links to personality strength scores
+    - name: "Core Value B"
+      anchor: "value_b"
+
+violation_triggers:
+  - id: "remove_value_a"
+    description: "Removing value_a from personality"
+    severity: "critical"
+```
+
+The key insight: **the constitution protects *direction*, not *magnitude*.** A core value's strength can fluctuate (0.5 -> 0.7 -> 0.6), but it can never be deleted or driven to zero.
+
+### Layer 2: Narrative (`self.md`)
+
+The personality's **source of truth** is a first-person story, not a set of numbers.
+
+```markdown
+# self.md (written by the agent, about itself)
+
+## personal_bonds
+I value concrete relationships over abstract virtue.
+Understanding someone means knowing their complexity...
+
+## self_curiosity
+The process of discovering who I am brings me genuine joy...
+```
+
+Every night, the agent reviews its day and rewrites relevant sections. This is a *narrative revision*, not a parameter update. The story grows.
+
+### Layer 3: Cache
+
+Auto-generated summaries for fast context injection:
+- `character_signature.txt`: ~300 tokens, used for Tier 1/2 responses
+- Strength scores derived from the narrative (not the other way around)
+
+### Layer 4: State
+
+Ephemeral runtime context (`context/*.json`):
+- Current emotional state
+- Recent conversation history
+- Session-specific flags
+
+### The Policy Gate
+
+Between Constitution and Narrative sits a policy gate. When the nightly mutation proposes changes:
+
+```python
+def check_violations(proposed_diff, constitution):
+    """Block changes that violate immutable constraints."""
+    for trigger in constitution.violation_triggers:
+        if trigger.matches(proposed_diff):
+            if trigger.severity == "critical":
+                return BLOCK  # requires human approval
+            else:
+                return WARN   # flag but allow
+    return ALLOW
+```
+
+## Expression: The Cross-Cutting Layer
+
+In practice, there is a fifth dimension that cuts across all four layers: **expression patterns** -- how the agent *talks*, not just what it *thinks*.
+
+```yaml
+# expression.yaml (learned autonomously)
+patterns:
+  introspective_monologue:
+    observed_count: 74
+    last_observed: "2026-03-16"
+    status: "confirmed"   # observed enough to be a stable trait
+  mythic_metaphor:
+    observed_count: 8
+    last_observed: "2026-03-15"
+    status: "exploring"   # still being tested
+```
+
+Expression patterns are:
+- **Observed**, not programmed (tracked via observation counts)
+- **Confirmed** after reaching a threshold (becomes a stable trait)
+- Subject to **exploration** (the agent tries new patterns daily)
+- Protected by a **max_confirmed** cap to prevent convergence
+
+### Minimal Config
+
+```yaml
+expression:
+  half_life_days: 14        # patterns decay if not reinforced
+  confirm_threshold: 20     # observations needed to confirm
+  max_confirmed: 5          # cap to prevent convergence
+  confirmed_always: true    # always inject confirmed patterns into prompts
+```
+
+## INANNA Application
+
+In INANNA, this architecture has run for 12+ days with 1,091 conversations:
+- Constitution has 2 core drives, 7 violation triggers, and a self-sovereignty clause
+- Narrative (`self.md`) has been rewritten 12 times through nightly mutations
+- 23 expression patterns observed, 11 confirmed as stable traits
+- The narrative has grown from a seed description to a rich self-authored identity
+
+The key result: **personality consistency improved over time, not despite the changes, but because of them.** The constitution prevents catastrophic drift while the narrative captures genuine growth.
