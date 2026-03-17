@@ -65,7 +65,7 @@
 
 技術的な背景と観測結果については、Zenn の記事で詳しく整理しています。
 
-- **Zenn 記事**: （公開後に追加）
+- **Zenn 記事**: https://zenn.dev/articles/b4e90b7ef39026
 - **親プロジェクト**: [Artificial-Personality](https://github.com/Salmonellasarduri/Artificial-Personality)
 
 ## 設計上の基本方針
