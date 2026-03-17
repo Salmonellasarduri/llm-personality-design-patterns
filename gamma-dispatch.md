@@ -1,5 +1,35 @@
 # Gamma Dispatch: Agent-Driven Thought Depth
 
+A design pattern for letting an LLM agent participate in its own thought-depth routing.
+
+## What problem this solves
+
+Not every message deserves the same amount of thought.
+
+- quick greetings should not trigger deep reasoning
+- difficult or identity-relevant questions should not always get shallow replies
+
+External routing can be efficient, but what the agent itself finds worth thinking about is often part of its character.
+
+## What this pattern gives you
+
+- a three-stage thought-depth structure
+- a place for the agent to signal “I want to think deeper”
+- a mechanism for returning a temporary reply while deeper processing continues
+- a path toward agent-driven memory retrieval and meta-cognitive behavior
+
+## What this pattern does NOT do
+
+- it does not define a universal rule for when deeper thinking should trigger
+- it does not prove that self-routing is always better than external classifiers
+- it does not remove the need for latency or safety constraints
+
+## Good fit for
+
+- agents with recognizable conversational priorities
+- systems where thought-depth itself should reflect personality
+- architectures that already support staged responses
+
 ## Problem
 
 Not every message deserves the same computational effort. A "good morning" doesn't need 20 seconds of deep reasoning. But a philosophical question about identity might.
@@ -120,3 +150,6 @@ In 12 days of operation across Discord, X, ELYTH, and Stream platforms:
 - The `search_keywords` field means INANNA decides *what* to remember, not just *whether* to remember
 
 The behavioral conditions for `wants_deeper` (what makes INANNA curious enough to think deeply) are intentionally not documented here -- they are part of INANNA's unique personality, not a reusable pattern.
+
+---
+Back to [README](README.md) / [日本語README](README.ja.md)
