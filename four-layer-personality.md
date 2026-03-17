@@ -172,5 +172,22 @@ In INANNA, this architecture has run for 12+ days with 1,091 conversations:
 
 The key result: **personality consistency improved over time, not despite the changes, but because of them.** The constitution prevents catastrophic drift while the narrative captures genuine growth.
 
+## Failure modes / Anti-patterns
+
+### 1. No Constitution layer
+If the system has a mutable Narrative but no protected core, the agent may gradually rewrite not only its self-story but also its identity-level commitments.
+
+### 2. Cache becomes the real personality
+If the runtime cache is treated as the personality source rather than a compressed runtime view, the agent’s identity becomes dominated by summarization artifacts.
+
+### 3. State leaks into long-term identity
+If short-term emotional state is written directly into long-term personality layers, temporary noise can become permanent drift.
+
+### 4. Narrative without rewrite discipline
+If the Narrative layer is rewritten too loosely or too often without structure, it can become bloated, repetitive, or self-contradictory.
+
+### 5. Core values are too vague
+If Constitution values are generic enough to justify anything, the layer exists formally but provides little real constraint.
+
 ---
 Back to [README](README.md) / [日本語README](README.ja.md)
