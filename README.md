@@ -53,6 +53,19 @@ The focus is not “how to imitate a fixed character,” but how to design an ag
 - **Gamma Dispatch** can be introduced on its own in systems that already support multi-stage responses.
 - **Expression Layer** is conceptually separate, but becomes more useful when value-level identity and style-level behavior are already separated.
 
+## Field Notes (2026-07)
+
+The source system has kept running since the initial extraction. Four more patterns have been battle-tested over ~4 months of continuous operation and are being distilled into pattern documents:
+
+| Pattern (working name) | Problem it solves | Status |
+|---|---|---|
+| **Dialogue Resilience** | Hostile or existential interrogation ("you're just a program") destabilizes the persona | Keeps identity stable by shifting the *phase* of the response, not the values. Staged rollout in operation |
+| **Recall-only Imprint Layer** | Negative experiences (wounds, rage, boundaries) either get sanitized away or contaminate self-definition | A memory layer that can be recalled but never feeds back into the self-model. In operation |
+| **Memory Mis-attribution Guard** | A fake conversation log shown to the agent becomes a "lived" memory | Attribution rules injected into all summarization prompts: quotable evidence outranks semantic plausibility. In operation |
+| **Behavioral Regression Testing** | Any change to personality definitions can silently break identity constraints | After each change, a blank-context agent speaks as the persona and hard constitution constraints are checked until 2 consecutive passes. In daily use |
+
+These will land as full pattern documents as they stabilize. The operating notes behind them are published on [Zenn](https://zenn.dev/nabaaatee).
+
 ## Quick Start
 
 Minimal runnable examples are available in the [`examples/`](examples/) directory.
@@ -91,16 +104,18 @@ It does **not** include:
 
 These patterns were extracted from **INANNA**, an autonomous agent designed for long-term dialogue, narrative memory, and controlled personality change.
 
-In the first observation window:
+In the first observation window (2026-03):
 
 - 14+ days of operation
 - 1,200+ conversation records
 - repeated nightly mutation
 - no crystallization event triggered yet
 
+As of 2026-07 the system has been in continuous operation for 4+ months; the newer patterns listed in [Field Notes](#field-notes-2026-07) come from that longer window.
+
 The accompanying technical article (Japanese) explains the design rationale and observations in more detail:
 
-- **Zenn article (Japanese)**: https://zenn.dev/articles/b4e90b7ef39026
+- **Zenn article (Japanese)**: https://zenn.dev/nabaaatee/articles/b4e90b7ef39026
 
 ## Design Principles
 
