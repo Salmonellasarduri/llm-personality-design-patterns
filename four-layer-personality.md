@@ -1,5 +1,7 @@
 # Four-Layer Personality Model + Expression
 
+**Evidence status:** `operational`
+
 A reusable design pattern for separating stable identity from gradual personality change in long-running LLM agents.
 
 ## What problem this solves
@@ -164,13 +166,18 @@ expression:
 
 ## INANNA Application
 
-In INANNA, this architecture has run for 14+ days with 1,226 conversations:
+In the original 14-day window, this architecture processed 1,226 experience
+records:
 - Constitution has 2 core drives, 7 violation triggers, and a sovereignty clause
 - Narrative (`self.md`) has been rewritten 13 times through nightly mutations
-- 24 expression patterns observed, 11 confirmed as stable traits
+- 24 expression patterns were observed; the runtime cap allowed at most 5 to be
+  active as confirmed patterns at once
 - The narrative has grown from a seed description to a rich self-authored identity
 
-The key result: **personality consistency improved over time, not despite the changes, but because of them.** The constitution prevents catastrophic drift while the narrative captures genuine growth.
+The source system has since continued for 4+ months. That demonstrates continued
+use of the separation, not causal proof that it is more consistent than a flat
+persona. The reusable claim is narrower: the Constitution and Narrative provide
+different authorities and can be observed independently.
 
 ## Failure modes / Anti-patterns
 

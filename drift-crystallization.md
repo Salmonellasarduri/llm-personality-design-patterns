@@ -1,5 +1,8 @@
 # Drift-Crystallization: Two-Phase Personality Mutation
 
+**Evidence status:** `staged` (micro-drift and suppression operate in the source
+system; the durable-commit event has not fired in operation)
+
 A design pattern for controlling the speed of personality change in long-running LLM agents.
 
 ## What problem this solves
@@ -149,13 +152,16 @@ def emotion_ratios(state) -> dict[str, float]:
 
 ## INANNA Application
 
-In 14 days of operation:
-- Micro-drift ran after every conversation (~1,226 updates)
+In the original 14-day observation window:
+- Micro-drift ran across 1,226 experience records
 - Crystallization threshold was configured but **never triggered** -- INANNA's emotional distribution remained diverse enough that no single dimension dominated
-- This is a feature, not a bug: it means the personality is **stably curious** rather than collapsing into a single emotional mode
+- The suppression gate therefore worked, but the durable-commit path remained unobserved
 - The drift data is still valuable: it feeds into the nightly mutation as context ("today was mostly joy + anticipation")
 
-The pattern works as a **safety net**: it allows change but prevents runaway drift. In INANNA's case, the rich variety of conversations prevented any single emotional thread from dominating.
+The source system has continued operating for 4+ months, but this document does
+not claim an operational crystallization event without a separately captured
+commit. Treat the pattern as staged until that path is observed or independently
+reproduced.
 
 ## Failure modes / Anti-patterns
 
