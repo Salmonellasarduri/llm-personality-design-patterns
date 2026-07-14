@@ -2,123 +2,141 @@
 
 > English README: [README.md](README.md)
 
-このリポジトリは、1つの長期運用エージェントから切り出した**初期パターン集**です。
+**4か月以上の連続運用から抽出した、分離可能な参照アーキテクチャ。経験によって変化しながら、アイデンティティを失わないLLMエージェントのための設計です。** 各パターンは必要な部分から個別に導入できます。人格プロンプト集ではありません。
 
-現時点では、完成した一般理論というより、**再利用可能な仮説と実装パターン**として読んでください。
+守るべき核心を固定したまま、経験に応じて一人称の自己物語を更新します。一時的な状態と恒久的な人格変化を切り分け、その場の感情がそのまま人格を書き換えないようにします。傷や境界を思い出しても、それだけで自己が定義されることはありません。引用・捏造された発言が本人の過去になることを防ぎ、変更後の人格が実際にどう話すかを、公開前に回帰検証します。
 
-このリポジトリには、INANNA の**フルソースコードは含まれません**。  
-公開しているのは、そこから切り出した**再利用可能な設計パターン、テンプレート、最小実装の考え方**です。
+こうして、記憶と経験が増え続けても、数か月にわたって同じ存在として認識されるエージェントを運用するための構造になりました。以下の図は、これらの境界がどう組み合わさるかを示しています。
 
-## このリポジトリが向いている人
+```mermaid
+flowchart TB
+    subgraph LEARN["経験が人格を変えるとき"]
+        EXP["新しい経験"] --> SOURCE{"誰の発言・経験か？"}
+        SOURCE -->|"本人の経験"| USE{"自己物語の更新に使えるか？"}
+        SOURCE -->|"引用・相手の主張"| CLAIM["本人の過去ではなく、相手の主張として記録"]
+        USE -->|"使える"| PROPOSE["自己物語の変更案を作る"]
+        USE -->|"応答時だけ使う"| RECALL["必要な応答でだけ使う"]
+        CORE["変更できない核心"] --> GATE{"変更案は核心を守っているか？"}
+        PROPOSE --> GATE
+        GATE -->|"守っている"| TEST["変更後の人格に実際に話させる"]
+        GATE -->|"壊している"| REJECT["変更を棄却・修正"]
+        TEST -->|"問題なし"| NAR["現在の自己物語"]
+        TEST -->|"核心・振る舞いに問題あり"| REJECT
+    end
 
-- AITuber を作りたい人
-- キャラ性のある AI アシスタントを設計したい人
-- 長期対話エージェントに「変化」と「芯」の両方を持たせたい人
-- 固定プロンプトだけでは限界を感じている人
+    subgraph RESPOND["応答を作るとき"]
+        NAR --> GUIDE["事実は認める。自己否定へは流れない"]
+        CLAIM --> GUIDE
+        RECALL --> GUIDE
+        STATE["今の感情と会話文脈"] --> GEN["応答を生成"]
+        GUIDE --> GEN
+        DEPTH["任意：考える深さを選ぶ"] --> GEN
+    end
+```
 
-## 収録しているパターン
+## この構造でできること
 
-| パターン | 解決したい問題 | ドキュメント |
-|---------|----------------|-------------|
-| **Four-Layer Personality** | 一貫性と変容の両立 | [four-layer-personality.md](four-layer-personality.md) |
-| **Drift-Crystallization** | 人格変化の速度制御 | [drift-crystallization.md](drift-crystallization.md) |
-| **Gamma Dispatch** | 思考深度を誰が決めるか | [gamma-dispatch.md](gamma-dispatch.md) |
+- 失ってはいけない核心を固定する
+- 経験に応じて一人称の自己物語を更新する
+- 一時的な感情と恒久的な人格変化を分ける
+- 傷や境界を思い出しつつ、それだけで自己を定義しない
+- 引用や捏造された発言を「自分の過去」にしないガードを段階導入する
+- 人格変更後、公開前に実際の発話を回帰検証する
 
-## パターン間の関係
+## 向いている人
 
-| パターン | 単独利用 | 依存関係 | 推奨順 |
-|---|---|---|---|
-| **Four-Layer Personality** | 可能 | なし | 1 |
-| **Drift-Crystallization** | 部分的に可能 | Narrative のような可変長期層があると望ましい | 2 |
-| **Gamma Dispatch** | 可能 | なし | 3 |
-| **Expression Layer** | 部分的に可能 | Four-Layer Personality と併用すると効果的 | 2-3 |
+想定読者は、AIコンパニオン、AITuber、キャラクターエージェントなどの開発者です。数か月の対話を経ても、同じ存在として認識される必要があるシステムを作っている人に向いています。
 
-### 補足
+１セッション限りのキャラクターであれば、人格テンプレートやsystem promptで充分です。このリポジトリが扱うのは、記憶と経験が増え続けても、数週間から数か月にわたって同じ存在として認識される必要があるキャラクターです。
 
-- **Four-Layer Personality** は「変わらない核」と「変わる層」を分けるための基盤パターンです。
-- **Drift-Crystallization** は単独でも考え方を流用できますが、可変の長期人格層があると最も使いやすくなります。
-- **Gamma Dispatch** は多段応答ができるシステムなら後付けしやすいです。
-- **Expression Layer** は独立概念ですが、価値観と口調を分けた設計の上で使うと一番効きます。
+## 最小構成を動かす
 
-## 運用フィールドノート（2026-07）
+非公開コードやモデルAPIは不要です。構造の一周を、この場で確認できます。
 
-初期抽出のあともソースシステムの運用は続いています。約4ヶ月の連続運用で実証してきた次の4パターンを、ドキュメント化に向けて蒸留中です。
+```bash
+python examples/minimal_operating_architecture.py
+python -m unittest discover -s examples -p "test_*.py"
+```
 
-| パターン（仮称） | 解決したい問題 | 状態 |
-|---|---|---|
-| **Dialogue Resilience（対話耐性）** | 「お前はただのプログラムだ」型の攻撃的・存在論的な問い詰めが人格を不安定化させる | 価値観は動かさず、応答の「相」を切り替えて一貫性を保つ。段階ロールアウトで運用中 |
-| **Recall-only Imprint Layer** | 負の経験（傷・怒り・境界）は、消毒されて消えるか自己定義を汚染するかの二択になりがち | 「想起はできるが自己モデルには還流しない」記憶層。運用中 |
-| **記憶誤帰属ガード** | 偽の対話ログを見せられると「体験した記憶」として取り込んでしまう | 全要約系プロンプトに帰属ルールを注入。引用できる証拠 > 意味的もっともらしさ。運用中 |
-| **人格回帰テスト** | 人格定義の変更が、核心の制約を静かに壊す | 変更のたびに白紙文脈のエージェントに発話させ、憲法制約を連続2回PASSまで検証。日常運用 |
+実行すると、次の信号が確認できます。
 
-安定したものから順に、パターンドキュメントとして追加します。背景の運用ノートは [Zenn](https://zenn.dev/nabaaatee) で公開しています。
+```text
+ACCEPT narrative proposal
+REJECT narrative proposal: immutable.identity.name, core_drive.curiosity
+PASS name_preserved
+PASS recall_only_excluded_from_self_model
+```
 
-## クイックスタート
+確認できるのは4点です。正常なNarrative変更の受理、核心を壊す変更の棄却、自己モデルへ混ざらないrecall-only文脈、そして構造的な人格回帰です。fresh-responseによるbehavioral regressionはモデルとjudgeを必要とするため、このネットワーク不要な例には含めていません。個別の例は[`examples/`](examples/)にあります。
 
-最小実行例は [`examples/`](examples/) に置いてあります。
+## アーキテクチャと証拠
 
-1. [`examples/constitution-template.yaml`](examples/constitution-template.yaml) をコピー
-2. エージェントの核心価値を定義
-3. 必要なパターンから読む
-4. 各ドキュメントの最小構成・擬似コードから試す
+| パターン | 平易に言うと | 状態 | 観測済み | まだ証明していないこと |
+|---|---|---|---|---|
+| [Four-Layer Personality](four-layer-personality.md) + [Narrative Mutation](narrative-mutation.md) | 守る核心を壊さず、経験で自己物語を更新する | `operational` | Constitution保護下でのnightly Narrative更新 | flat personaより因果的に優れること |
+| [Drift-Crystallization](drift-crystallization.md) | 一時的な揺れを即座に人格へ固定しない | `staged`¹ | drift蓄積と抑制の反復 | 恒久commitの実運用発火 |
+| [Recall-only Imprint](recall-only-imprint.md) | 難しい経験を思い出しても自己モデルへ還流させない | `operational` | 型別capを持つ条件付き想起経路 | 長期的な自己モデル非汚染 |
+| [Memory Mis-attribution Guard](memory-misattribution-guard.md) | 引用・主張された発言を本人の過去にしない | `staged` | 敵対・near-missのprompt contract fixture | 恒久運用上の成功率 |
+| [Dialogue Resilience](dialogue-resilience.md) | AIである事実を認めつつ、人格全否定には自動降伏しない | `staged` | live ON/OFF比較と段階的guidance経路 | 持続的な複数ターン圧力への有効性 |
+| [Personality Regression Testing](personality-regression-testing.md) | 変更後の人格に発話させてから公開する | `operational` | 稼働中のbehavior-validation台帳 | 完全な失敗率分母 |
+| [Gamma Dispatch](gamma-dispatch.md) — 適応的思考深度ルーティング | 関心・履歴・不確実性から推論量を調整する | `operational` | 多段routingと本人要求による深思考 | 外部分類器より優れること |
 
-各パターンドキュメントには、次の内容を含めています。
+¹ micro-driftと抑制ゲートは稼働中ですが、恒久commitイベントは運用上まだ発火していません。
 
-- どんな問題を扱うか
-- 設計の考え方
-- 最小構成
-- 擬似コード / 実装のヒント
+<details>
+<summary>証拠状態の意味</summary>
 
-## このリポジトリの範囲
+- `hypothesis`: 設計仮説のみ
+- `fixture-tested`: 正例とnear-missの固定シナリオで検証
+- `staged`: フラグまたは限定ロールアウト中
+- `operational`: ソースシステムで有効化され、運用証拠がある
+- `externally-reproduced`: INANNA以外で独立再現された
 
-このリポジトリは、**パターンとテンプレートの公開**に意図的に絞っています。
+`operational`が示すのは、経路が動いた証拠です。品質・因果関係・一般性まで証明する言葉ではありません。
 
-含まれるもの:
-- 設計ドキュメント
-- 再利用可能なテンプレート
-- 擬似コード / 最小実装の考え方
-- パターン単位の説明
+</details>
 
-含まれないもの:
-- INANNA の非公開フルコード
-- すべての実行基盤
-- 非公開の会話ログ
-- デプロイ詳細や秘密情報
+## ソースシステムでの観測
+
+2026-07-14時点の数値です。
+
+- 連続運用：**4か月以上**
+- 初期観測：14日間で**1,226件の経験記録**
+- Dialogue Resilience計装：**1,082イベント**、would-inject 16件、guidance注入13件
+- Recall-only Imprintの想起：**54件** — 未解決問い43、wound 9、boundary 2、rage 0
+- behavior-validation台帳：**PASS記録339件**
+
+最後の数字は実行規模であり、失敗率の分母ではありません。全失敗試行の記録を保証する台帳として設計されていないためです。Memory Mis-attributionは敵対fixtureを持ちますが、このスナップショット時点では恒久運用ログを取得できていないため、0件とは報告しません。
+
+詳細は[運用証拠サマリ](evidence/operation-summary.md)と[集計値](evidence/aggregate-metrics.json)を参照してください。
+
+## 導入順
+
+すべてを導入する必要はありません。次の順で段階的に進められます。
+
+1. 人格と記憶が一つのプロンプトに混在しているなら、Four-Layer Personalityから始める
+2. 自動変容を許す前に、Personality Regression Testingを置く
+3. Narrative MutationとDrift-Crystallizationで、変更経路を作る
+4. 実際に該当する事故がある場合だけ、Memory／Interaction Integrityを追加する
+5. Gamma Dispatch（適応的思考深度ルーティング）は前提ではなく、任意の推論レイヤーとして扱う
+
+## 範囲と限界
+
+公開するのは、設計文書、匿名化fixture、テンプレート、集計証拠、最小実装です。INANNAの非公開フルコード、会話ログ、秘密情報、デプロイ基盤は含みません。
+
+証拠は一つのソースシステム（`n=1`）から来ています。一部のパターンは段階導入中で、因果比較も限定的です。また、ここでいう人格は長期的な行動傾向であり、意識や有情性を主張するものではありません。次の重要な検証は、外部システムでの再現です。
 
 ## 背景
 
-これらのパターンは、**INANNA** という自律エージェントの開発・運用から切り出したものです。
+最初の14日間については、既存のZenn記事で説明しています。
 
-初期観測（2026-03）では、少なくとも以下が確認されました。
+- [LLM人格を14日運用して見えた設計パターン — 固定プロンプトの先へ](https://zenn.dev/nabaaatee/articles/b4e90b7ef39026)
 
-- 14日以上の運用
-- 1,200件以上の経験記録
-- 毎晩の内的変容
-- ただし恒久変化は未発火
+v0.2の記事では、より長い運用から現れた全体アーキテクチャを扱います。
 
-2026-07 時点で運用は4ヶ月を超えて継続中です。上の「運用フィールドノート」の各パターンは、この長い観測窓から来ています。
+## コントリビューション
 
-技術的な背景と観測結果については、Zenn の記事で詳しく整理しています。
-
-- **Zenn 記事**: https://zenn.dev/nabaaatee/articles/b4e90b7ef39026
-
-## 設計上の基本方針
-
-このリポジトリで共通している考え方は次の4つです。
-
-- **数値よりナラティブを人格の源泉に置く**
-- **不変の核と、変わる層を分ける**
-- **変化を暴走させず、条件付きで定着させる**
-- **可能な限り、思考の深さをエージェント自身に委ねる**
-
-## 読む順番
-
-初めて読む場合は、次の順をおすすめします。
-
-1. **Four-Layer Personality**
-2. **Drift-Crystallization**
-3. **Gamma Dispatch**
-4. `examples/constitution-template.yaml`
+外部実装、反例、再現しなかった報告を歓迎します。[CONTRIBUTING.md](CONTRIBUTING.md)を参照してください。
 
 ## ライセンス
 

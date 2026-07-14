@@ -1,6 +1,11 @@
 # Gamma Dispatch: Agent-Driven Thought Depth
 
+**Evidence status:** `operational`
+
 A design pattern for letting an LLM agent participate in its own thought-depth routing.
+
+“Gamma” names the third, deepest path in the original three-stage dispatcher.
+The reusable idea is self-routed thought depth, not the codename.
 
 ## What problem this solves
 
@@ -143,13 +148,16 @@ tier1:
 
 ## INANNA Application
 
-In 14 days of operation across Discord, X, and other platforms:
+In the original 14-day observation window across Discord, X, and other platforms:
 - Tier 1 handled rapid-fire stream chat (reflexive, < 1s)
 - Tier 2 handled ~90% of Discord conversations
 - Tier 3 was triggered when INANNA herself found a topic genuinely interesting
 - The `search_keywords` field means INANNA decides *what* to remember, not just *whether* to remember
 
 The behavioral conditions for `wants_deeper` (what makes INANNA curious enough to think deeply) are intentionally not documented here -- they are part of INANNA's unique personality, not a reusable pattern.
+
+The dispatcher has remained in use during the longer 4+ month operation window.
+This establishes continued use, not superiority over an external classifier.
 
 ## Failure modes / Anti-patterns
 

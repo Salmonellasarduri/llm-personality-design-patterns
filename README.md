@@ -2,138 +2,143 @@
 
 > 日本語README: [README.ja.md](README.ja.md)
 
-Reusable design patterns for building long-running LLM agents that can evolve through experience while maintaining a stable core identity.
+A separable architecture that lets an LLM agent change through experience without losing its identity. Extracted from 4+ months of continuous operation, its patterns can be adopted one at a time. This is not a persona prompt collection.
 
-This repository contains an **initial set** of reusable design patterns extracted from one long-running agent system.
+The architecture holds a protected identity constant while experience revises the agent's first-person narrative. It separates transient state from durable change, so a passing mood cannot rewrite who the agent is. It lets the agent carry difficult memories without being defined by them, guards against quoted or claimed speech becoming its own remembered past, and regression-tests the changed persona's actual speech before it ships.
 
-They should currently be read as **reusable hypotheses and implementation patterns**, not as fully generalized results.
+The result is a structure for keeping an agent recognizable across months while memory and experience continue to change it. The diagram below shows how these boundaries fit together.
 
-This repository does **not** contain the full source code of INANNA.  
-It publishes the **reusable patterns, templates, and minimal implementation ideas** extracted from that project.
+```mermaid
+flowchart TB
+    subgraph LEARN["When experience may change the agent"]
+        EXP["New experience"] --> SOURCE{"Who said or experienced this?"}
+        SOURCE -->|"the agent"| USE{"May it update identity?"}
+        SOURCE -->|"quoted or claimed"| CLAIM["Record it as a claim, not the agent's past"]
+        USE -->|"yes"| PROPOSE["Propose a self-story update"]
+        USE -->|"response use only"| RECALL["Use it only when a response needs it"]
+        CORE["Protected core identity"] --> GATE{"Does the proposal preserve the core?"}
+        PROPOSE --> GATE
+        GATE -->|"yes"| TEST["Make the changed persona speak"]
+        GATE -->|"no"| REJECT["Reject or revise the change"]
+        TEST -->|"pass"| NAR["Current self-story"]
+        TEST -->|"identity or behavior broke"| REJECT
+    end
 
-## Who this is for
+    subgraph RESPOND["When the agent responds"]
+        NAR --> GUIDE["Acknowledge facts without collapsing into self-denial"]
+        CLAIM --> GUIDE
+        RECALL --> GUIDE
+        STATE["Current mood and conversation"] --> GEN["Generate a response"]
+        GUIDE --> GEN
+        DEPTH["Optional: choose reasoning depth"] --> GEN
+    end
+```
 
-This repository is for developers building:
+## What the architecture lets you do
 
-- AI companions
-- AITubers or character-driven assistants
-- long-running conversational agents
-- systems that need both **consistency** and **controlled change**
+- Preserve non-negotiable identity constraints.
+- Revise a first-person self-narrative through experience.
+- Separate transient affect from durable change.
+- Remember difficult experiences without becoming defined by them.
+- Stage a guard against quoted or claimed speech becoming lived memory.
+- Test how the changed persona speaks before you ship it.
 
-## What this repository contains
+## Is this for you?
 
-The focus is not “how to imitate a fixed character,” but how to design an agent that can:
+Reach for these patterns if you are building an AI companion, AITuber, character-driven assistant, or another conversational agent that has to stay recognizable across months of interaction.
 
-- keep core values stable
-- change gradually through experience
-- avoid uncontrolled drift
-- decide when deeper thinking is needed
+If your agent only needs to hold character for a single session, a persona template or system prompt is the more direct tool. This repository starts where the agent must stay recognizable for weeks or months while memory and experience keep changing it. It is not a digital-twin authoring pipeline, and it is not an installable all-in-one runtime.
 
-## Patterns
+## Start with a working slice
 
-| Pattern | Problem it solves | Docs |
-|---------|-------------------|------|
-| **Four-Layer Personality** | Consistency vs. evolution trade-off | [four-layer-personality.md](four-layer-personality.md) |
-| **Drift-Crystallization** | Controlling the rate of personality change | [drift-crystallization.md](drift-crystallization.md) |
-| **Gamma Dispatch** | Agent-driven thought depth selection | [gamma-dispatch.md](gamma-dispatch.md) |
+The reference example runs with no network, no private INANNA code, and no model calls. It demonstrates the operating loop directly:
 
-## Pattern dependencies
+```bash
+python examples/minimal_operating_architecture.py
+python -m unittest discover -s examples -p "test_*.py"
+```
 
-| Pattern | Can be used alone? | Depends on | Recommended order |
-|---|---|---|---|
-| **Four-Layer Personality** | Yes | none | 1 |
-| **Drift-Crystallization** | Partly | works best with a mutable Narrative-like layer | 2 |
-| **Gamma Dispatch** | Yes | none | 3 |
-| **Expression Layer** | Partly | works best with Four-Layer Personality | 2-3 |
+Expected signals:
 
-### Dependency notes
+```text
+ACCEPT narrative proposal
+REJECT narrative proposal: immutable.identity.name, core_drive.curiosity
+PASS name_preserved
+PASS recall_only_excluded_from_self_model
+```
 
-- **Four-Layer Personality** is the best starting point if you want both stability and controlled change.
-- **Drift-Crystallization** can be adapted independently, but works best when your system already has a mutable long-term layer such as Narrative.
-- **Gamma Dispatch** can be introduced on its own in systems that already support multi-stage responses.
-- **Expression Layer** is conceptually separate, but becomes more useful when value-level identity and style-level behavior are already separated.
+What that run shows: an accepted Narrative mutation, a Constitution rejection of an identity-breaking mutation, recall-only context that stays outside the self-model, and structural regression checks. Fresh-response behavioral regression needs a model and a judge, so it is deliberately left out of this network-free example.
 
-## Field Notes (2026-07)
+For individual patterns, see the smaller examples in [`examples/`](examples/).
 
-The source system has kept running since the initial extraction. Four more patterns have been battle-tested over ~4 months of continuous operation and are being distilled into pattern documents:
+## Architecture and evidence
 
-| Pattern (working name) | Problem it solves | Status |
-|---|---|---|
-| **Dialogue Resilience** | Hostile or existential interrogation ("you're just a program") destabilizes the persona | Keeps identity stable by shifting the *phase* of the response, not the values. Staged rollout in operation |
-| **Recall-only Imprint Layer** | Negative experiences (wounds, rage, boundaries) either get sanitized away or contaminate self-definition | A memory layer that can be recalled but never feeds back into the self-model. In operation |
-| **Memory Mis-attribution Guard** | A fake conversation log shown to the agent becomes a "lived" memory | Attribution rules injected into all summarization prompts: quotable evidence outranks semantic plausibility. In operation |
-| **Behavioral Regression Testing** | Any change to personality definitions can silently break identity constraints | After each change, a blank-context agent speaks as the persona and hard constitution constraints are checked until 2 consecutive passes. In daily use |
+| Pattern | Plain-language purpose | Status | Observed | Still unproved |
+|---|---|---|---|---|
+| [Four-Layer Personality](four-layer-personality.md) + [Narrative Mutation](narrative-mutation.md) | Let experience revise the story without rewriting protected identity | `operational` | Nightly Narrative revision under a protected Constitution | Causal improvement over a flat persona |
+| [Drift-Crystallization](drift-crystallization.md) | Keep temporary fluctuation from becoming instant identity | `staged`¹ | Repeated drift accumulation and suppression | An operational durable-commit event |
+| [Recall-only Imprint](recall-only-imprint.md) | Recall difficult experience without feeding it back into the self-model | `operational` | Gated recall path with typed caps | Long-term absence of self-model contamination |
+| [Memory Mis-attribution Guard](memory-misattribution-guard.md) | Stop quoted or claimed speech from becoming the agent's own past | `staged` | Adversarial and near-miss prompt-contract fixtures | Durable runtime success rate |
+| [Dialogue Resilience](dialogue-resilience.md) | Accept substrate facts without surrendering the entire identity frame | `staged` | Live ON/OFF comparison and staged guidance path | Sustained multi-turn effectiveness |
+| [Personality Regression Testing](personality-regression-testing.md) | Make the changed persona speak before shipping it | `operational` | Active behavioral-validation ledger | Complete failure-rate denominator |
+| [Gamma Dispatch](gamma-dispatch.md) — adaptive think-depth routing | Adjust reasoning depth using current interest, history, and uncertainty | `operational` | Live multi-stage routing and agent-requested deeper thought | Superiority over external routing |
 
-These will land as full pattern documents as they stabilize. The operating notes behind them are published on [Zenn](https://zenn.dev/nabaaatee).
+¹ Micro-drift and the suppression gate operate in the source system. The durable-commit event has not fired in operation.
 
-## Quick Start
+<details>
+<summary>Evidence status vocabulary</summary>
 
-Minimal runnable examples are available in the [`examples/`](examples/) directory.
+- `hypothesis`: design proposal only;
+- `fixture-tested`: exercised with committed positive and near-miss fixtures;
+- `staged`: deployed behind a flag or limited rollout;
+- `operational`: enabled in the source system with observable runtime evidence;
+- `externally-reproduced`: independently implemented outside INANNA.
 
-1. Copy [`examples/constitution-template.yaml`](examples/constitution-template.yaml)
-2. Define your agent’s non-negotiable core values
-3. Pick the pattern(s) relevant to your use case
-4. Start from the minimal config / pseudocode in each pattern document
+`Operational` proves that a path ran. It does not, by itself, prove quality, causality, or generality.
 
-Each pattern document includes:
+</details>
 
-- the problem it addresses
-- the design idea
-- a minimal configuration
-- pseudocode or implementation guidance
+## Evidence from the source system
 
-## Repository Scope
+As of 2026-07-14:
 
-This repository is intentionally scoped to **patterns and templates**.
+- Continuous source-system operation: **4+ months**.
+- Initial observation window: **1,226 experience records over 14 days**.
+- Staged Dialogue Resilience instrumentation: **1,082 events**, including 16 would-inject decisions and 13 guidance injections.
+- Recall-only Imprint surfaces: **54** total — 43 open questions, 9 wounds, 2 boundaries, 0 rage.
+- Behavioral-validation ledger: **339 recorded PASS entries**.
 
-It includes:
+Read the last figure carefully: it is execution evidence, not a failure-rate denominator. The ledger was not designed to prove that every failed attempt was recorded. Memory Mis-attribution has committed adversarial fixtures, but durable runtime capture was unavailable at this snapshot, so it is not reported as zero.
 
-- design documents
-- reusable templates
-- pseudocode / minimal implementation ideas
-- pattern-level explanations
+See the sanitized [operation summary](evidence/operation-summary.md) and [aggregate metrics](evidence/aggregate-metrics.json).
 
-It does **not** include:
+## Recommended adoption order
 
-- the entire private codebase of INANNA
-- all runtime infrastructure
-- private conversation logs
-- project-specific secrets or deployment details
+You do not need the entire architecture. Add pieces in this order:
 
-## Context
+1. Start with **Four-Layer Personality** if identity and memory are currently a single prompt or blob.
+2. Add **Personality Regression Testing** before you allow automated Narrative changes.
+3. Add **Narrative Mutation** and **Drift-Crystallization** when experience is allowed to alter durable self-description.
+4. Add the Memory and Interaction Integrity patterns only where their failure modes exist in your system.
+5. Treat **Gamma Dispatch** (adaptive think-depth routing) as an optional reasoning layer, not a prerequisite.
 
-These patterns were extracted from **INANNA**, an autonomous agent designed for long-term dialogue, narrative memory, and controlled personality change.
+## Scope and limitations
 
-In the first observation window (2026-03):
+What's in this repository: design documents, sanitized fixtures, templates, aggregate evidence, and minimal implementations. What's not: the full INANNA codebase, private conversations, secrets, and deployment infrastructure.
 
-- 14+ days of operation
-- 1,200+ conversation records
-- repeated nightly mutation
-- no crystallization event triggered yet
+The evidence comes from one source system (`n=1`). Several patterns remain staged, causal comparisons are limited, and none of this should be treated as a claim of consciousness or sentience. Here, personality means durable behavioral tendencies — not evidence of subjective experience. External reproduction is the next meaningful validation step.
 
-As of 2026-07 the system has been in continuous operation for 4+ months; the newer patterns listed in [Field Notes](#field-notes-2026-07) come from that longer window.
+## Background
 
-The accompanying technical article (Japanese) explains the design rationale and observations in more detail:
+The first Japanese technical article covers the initial 14-day extraction:
 
-- **Zenn article (Japanese)**: https://zenn.dev/nabaaatee/articles/b4e90b7ef39026
+- [LLM人格を14日運用して見えた設計パターン — 固定プロンプトの先へ](https://zenn.dev/nabaaatee/articles/b4e90b7ef39026)
 
-## Design Principles
+The v0.2 article will cover the operating architecture that emerged over the longer observation window.
 
-Across the patterns in this repository, the recurring principles are:
+## Contributing
 
-- **Narrative-first personality** rather than flat numeric traits
-- **Stable core + mutable layers** instead of all-or-nothing updates
-- **Controlled change** rather than unrestricted drift
-- **Agent-driven cognition** where possible, instead of routing everything externally
-
-## Suggested Reading Order
-
-If you are new to the project, a good order is:
-
-1. **Four-Layer Personality**
-2. **Drift-Crystallization**
-3. **Gamma Dispatch**
-4. `examples/constitution-template.yaml`
+External implementations, counterexamples, and non-reproduction reports are especially valuable. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 

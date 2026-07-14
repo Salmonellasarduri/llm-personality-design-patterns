@@ -1,0 +1,38 @@
+{
+  "snapshot_date": "2026-07-14",
+  "source_systems": 1,
+  "continuous_operation_months_min": 4,
+  "initial_observation": {
+    "days": 14,
+    "experience_records": 1226
+  },
+  "dialogue_resilience": {
+    "instrumentation_events": 1082,
+    "would_inject": 16,
+    "guidance_injected": 13,
+    "evidence_status": "staged",
+    "limitation": "Single-turn gate does not reproduce sustained pressure."
+  },
+  "recall_only_imprint": {
+    "lifecycle_rows": 646,
+    "surfaces_total": 54,
+    "surfaces_by_type": {
+      "open_question": 43,
+      "wound": 9,
+      "boundary": 2,
+      "rage": 0
+    },
+    "evidence_status": "operational",
+    "limitation": "Counts demonstrate operation, not long-term self-model non-contamination."
+  },
+  "personality_regression_testing": {
+    "recorded_pass_entries": 339,
+    "evidence_status": "operational",
+    "limitation": "The ledger is not a complete failed-run denominator."
+  },
+  "memory_misattribution_guard": {
+    "durable_runtime_events": null,
+    "evidence_status": "staged",
+    "limitation": "Durable runtime capture was unavailable at the snapshot; null is not zero."
+  }
+}
