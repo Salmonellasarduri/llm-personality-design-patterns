@@ -2,21 +2,17 @@
 
 > 日本語README: [README.ja.md](README.ja.md)
 
-A separable architecture that lets an LLM agent change through experience without losing its identity. Extracted from 4+ months of continuous operation, its patterns can be adopted one at a time. This is not a persona prompt collection.
+**Design patterns for LLM agents that remain recognizable months later, even as experience and memory keep growing.** Extracted from 4+ months of continuous operation, each pattern can be adopted independently. This is not a persona prompt collection.
 
 The architecture holds a protected identity constant while experience revises the agent's first-person narrative. It separates transient state from durable change, so a passing mood cannot rewrite who the agent is. It lets the agent carry difficult memories without being defined by them, guards against quoted or claimed speech becoming its own remembered past, and regression-tests the changed persona's actual speech before it ships.
 
-The result is a structure for keeping an agent recognizable across months while memory and experience continue to change it. The diagram below shows how these boundaries fit together.
+This repository is built to produce one practical transformation:
 
 ```mermaid
 flowchart LR
-    KEEP["Keep stable<br/>Protected core"]
-    CHANGE["Change after a check<br/>Experience → self-story"]
-    DROP["Do not retain<br/>Transient state"]
-    KEEP ~~~ CHANGE ~~~ DROP
+    IN["Experience and memory<br/>keep growing"] --> DESIGN["Protect the core<br/>validate self-story updates"]
+    DESIGN --> OUT["Still recognizable<br/>months later"]
 ```
-
-This is not a left-to-right runtime sequence. It separates personality information into three handling rules.
 
 ## What the architecture lets you do
 
