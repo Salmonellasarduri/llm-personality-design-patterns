@@ -10,12 +10,13 @@ The result is a structure for keeping an agent recognizable across months while 
 
 ```mermaid
 flowchart LR
-    CORE["Protected core<br/>does not change"] ---|"sets what may change"| STORY["Self-story<br/>updated by experience"]
-    EXP["Experience"] -->|"adopt only after a check"| STORY
-    STATE["Transient state<br/>this conversation only"] -.-|"does not become personality"| STORY
+    KEEP["Keep stable<br/>Protected core"]
+    CHANGE["Change after a check<br/>Experience → self-story"]
+    DROP["Do not retain<br/>Transient state"]
+    KEEP ~~~ CHANGE ~~~ DROP
 ```
 
-This is a relationship map, not a runtime sequence.
+This is not a left-to-right runtime sequence. It separates personality information into three handling rules.
 
 ## What the architecture lets you do
 
