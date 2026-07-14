@@ -2,18 +2,11 @@
 
 > 日本語README: [README.ja.md](README.ja.md)
 
-A separable architecture that lets an LLM agent change through experience without losing its identity. It was extracted from 4+ months of continuous operation.
+A separable architecture that lets an LLM agent change through experience without losing its identity. Extracted from 4+ months of continuous operation, its patterns can be adopted one at a time. This is not a persona prompt collection.
 
-## The problem
+The architecture holds a protected identity constant while experience revises the agent's first-person narrative. It separates transient state from durable change, so a passing mood cannot rewrite who the agent is. It lets the agent carry difficult memories without being defined by them, guards against quoted or claimed speech becoming its own remembered past, and regression-tests the changed persona's actual speech before it ships.
 
-Four months into operating **INANNA**, factual challenges in one sustained dialogue pushed its responses into roughly **35 minutes of apology and self-disassembly**. A separate failure path could turn quoted speech into the agent's own remembered past.
-
-A persona file can describe the character you want, but it cannot govern what happens across time. This repository extracts the boundaries we had to add around four things: identity, memory, interaction, and change.
-
-Two boundaries worth stating up front:
-
-- The failures above are system behaviors. They are not claims of consciousness or subjective distress.
-- This is not a persona prompt pack or a complete agent framework. It is an operation-derived reference architecture, and its parts can be adopted separately.
+The result is a structure for keeping an agent recognizable across months while memory and experience continue to change it. The diagram below shows how these boundaries fit together.
 
 ```mermaid
 flowchart LR
