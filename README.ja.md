@@ -9,16 +9,29 @@
 こうして、記憶と経験が増え続けても、数か月にわたって同じ存在として認識されるエージェントを運用するための構造になりました。以下の図は、これらの境界がどう組み合わさるかを示しています。
 
 ```mermaid
-flowchart LR
-    EXP[経験] --> MEM[記憶の完全性]
-    MEM --> NAR[可変ナラティブ]
-    CON[Constitution] -->|Policy Gate| NAR
-    NAR --> INT[対話の完全性]
-    INT --> GEN[応答生成]
-    GEN --> VAL[人格回帰検証]
-    VAL -->|回帰を検出| NAR
-    STATE[短期状態] --> GEN
-    COG[適応的な思考深度] --> GEN
+flowchart TB
+    subgraph LEARN["経験が人格を変えるとき"]
+        EXP["新しい経験"] --> SOURCE{"誰の発言・経験か？"}
+        SOURCE -->|"本人の経験"| USE{"自己物語の更新に使えるか？"}
+        SOURCE -->|"引用・相手の主張"| CLAIM["本人の過去ではなく、相手の主張として記録"]
+        USE -->|"使える"| PROPOSE["自己物語の変更案を作る"]
+        USE -->|"応答時だけ使う"| RECALL["必要な応答でだけ使う"]
+        CORE["変更できない核心"] --> GATE{"変更案は核心を守っているか？"}
+        PROPOSE --> GATE
+        GATE -->|"守っている"| TEST["変更後の人格に実際に話させる"]
+        GATE -->|"壊している"| REJECT["変更を棄却・修正"]
+        TEST -->|"問題なし"| NAR["現在の自己物語"]
+        TEST -->|"核心・振る舞いに問題あり"| REJECT
+    end
+
+    subgraph RESPOND["応答を作るとき"]
+        NAR --> GUIDE["事実は認める。自己否定へは流れない"]
+        CLAIM --> GUIDE
+        RECALL --> GUIDE
+        STATE["今の感情と会話文脈"] --> GEN["応答を生成"]
+        GUIDE --> GEN
+        DEPTH["任意：考える深さを選ぶ"] --> GEN
+    end
 ```
 
 ## この構造でできること

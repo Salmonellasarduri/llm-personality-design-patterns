@@ -9,16 +9,29 @@ The architecture holds a protected identity constant while experience revises th
 The result is a structure for keeping an agent recognizable across months while memory and experience continue to change it. The diagram below shows how these boundaries fit together.
 
 ```mermaid
-flowchart LR
-    EXP[Experience] --> MEM[Memory Integrity]
-    MEM --> NAR[Mutable Narrative]
-    CON[Constitution] -->|policy gate| NAR
-    NAR --> INT[Interaction Integrity]
-    INT --> GEN[Response Generation]
-    GEN --> VAL[Behavioral Assurance]
-    VAL -->|regression found| NAR
-    STATE[Short-term State] --> GEN
-    COG[Adaptive Reasoning Depth] --> GEN
+flowchart TB
+    subgraph LEARN["When experience may change the agent"]
+        EXP["New experience"] --> SOURCE{"Who said or experienced this?"}
+        SOURCE -->|"the agent"| USE{"May it update identity?"}
+        SOURCE -->|"quoted or claimed"| CLAIM["Record it as a claim, not the agent's past"]
+        USE -->|"yes"| PROPOSE["Propose a self-story update"]
+        USE -->|"response use only"| RECALL["Use it only when a response needs it"]
+        CORE["Protected core identity"] --> GATE{"Does the proposal preserve the core?"}
+        PROPOSE --> GATE
+        GATE -->|"yes"| TEST["Make the changed persona speak"]
+        GATE -->|"no"| REJECT["Reject or revise the change"]
+        TEST -->|"pass"| NAR["Current self-story"]
+        TEST -->|"identity or behavior broke"| REJECT
+    end
+
+    subgraph RESPOND["When the agent responds"]
+        NAR --> GUIDE["Acknowledge facts without collapsing into self-denial"]
+        CLAIM --> GUIDE
+        RECALL --> GUIDE
+        STATE["Current mood and conversation"] --> GEN["Generate a response"]
+        GUIDE --> GEN
+        DEPTH["Optional: choose reasoning depth"] --> GEN
+    end
 ```
 
 ## What the architecture lets you do
